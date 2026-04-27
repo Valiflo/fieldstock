@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FieldStock — Inventory Management for Field Service Teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:       #0477BE;
+    --dark-blue:  #02304D;
+    --orange:     #C16C09;
+    --light-blue: #EAF4FB;
+    --off-white:  #F7F9FB;
+    --ink:        #1A2733;
+    --muted:      #5A7080;
+    --rule:       #D4E4EF;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: #fff;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ─────────────────────────────────────────────────────────── */
+  .hero {
+    background: var(--dark-blue);
+    padding: 72px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(4,119,190,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 20%;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(193,108,9,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .hero-eyebrow {
+    display: inline-block;
+    background: rgba(4,119,190,0.25);
+    border: 1px solid rgba(4,119,190,0.4);
+    color: #7EC8F0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(40px, 6vw, 64px);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 span { color: #5BB8F5; }
+
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.72);
+    max-width: 580px;
+    line-height: 1.65;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding-top: 36px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+
+  /* ── SECTIONS ─────────────────────────────────────────────────────── */
+  .section { padding: 72px 48px; }
+  .section-inner { max-width: 860px; margin: 0 auto; }
+  .section.alt { background: var(--off-white); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    color: var(--dark-blue);
+    line-height: 1.2;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+  .section-intro {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* ── THE FLOW ─────────────────────────────────────────────────────── */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 0;
+  }
+  .flow-step {
+    flex: 1;
+    background: var(--dark-blue);
+    padding: 32px 28px;
+    position: relative;
+  }
+  .flow-step:nth-child(2) { background: var(--blue); }
+  .flow-step:nth-child(3) { background: var(--orange); }
+
+  .flow-step::after {
+    content: '→';
+    position: absolute;
+    right: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: #fff;
+    z-index: 2;
+    font-weight: 300;
+  }
+  .flow-step:last-child::after { display: none; }
+
+  .flow-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .flow-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .flow-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+  }
+
+  /* ── FEATURE GRID ─────────────────────────────────────────────────── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .feature-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 28px 26px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .feature-card:hover {
+    box-shadow: 0 8px 32px rgba(2,48,77,0.10);
+    transform: translateY(-2px);
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    background: var(--light-blue);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .feature-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .feature-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── WHO DOES WHAT ────────────────────────────────────────────────── */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .role-card {
+    border-left: 3px solid var(--blue);
+    padding: 20px 22px;
+    background: #fff;
+    border-radius: 0 8px 8px 0;
+  }
+  .role-card.orange { border-color: var(--orange); }
+  .role-card.dark   { border-color: var(--dark-blue); }
+
+  .role-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark-blue);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .role-items { list-style: none; }
+  .role-items li {
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 4px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .role-items li::before {
+    content: '·';
+    color: var(--blue);
+    font-size: 18px;
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+
+  /* ── REPORTS ──────────────────────────────────────────────────────── */
+  .report-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .report-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+  }
+  .report-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .report-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 3px;
+  }
+  .report-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ── PHASES ───────────────────────────────────────────────────────── */
+  .phase-list { display: grid; gap: 16px; }
+  .phase-item {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 24px 28px;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    background: #fff;
+  }
+  .phase-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 42px;
+  }
+  .phase-content {}
+  .phase-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark-blue);
+    margin-bottom: 6px;
+  }
+  .phase-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .phase-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .phase-tag {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--light-blue);
+    color: var(--blue);
+    border: 1px solid rgba(4,119,190,0.2);
+  }
+
+  /* ── FEEDBACK ─────────────────────────────────────────────────────── */
+  .feedback-box {
+    background: var(--dark-blue);
+    border-radius: 12px;
+    padding: 48px;
+    text-align: center;
+  }
+  .feedback-box h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .feedback-box p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 500px;
+    margin: 0 auto 32px;
+    font-weight: 300;
+  }
+  .feedback-questions {
+    text-align: left;
+    max-width: 560px;
+    margin: 0 auto;
+    display: grid;
+    gap: 12px;
+  }
+  .fq {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.55;
+    display: flex;
+    gap: 12px;
+  }
+  .fq-num {
+    color: #5BB8F5;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── FOOTER ───────────────────────────────────────────────────────── */
+  .footer {
+    background: var(--dark-blue);
+    padding: 28px 48px;
+    text-align: center;
+  }
+  .footer p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ── DIVIDER ──────────────────────────────────────────────────────── */
+  .rule { border: none; border-top: 1px solid var(--rule); margin: 0; }
+
+  @media (max-width: 600px) {
+    .hero, .section { padding: 48px 24px; }
+    .flow { flex-direction: column; }
+    .flow-step::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -18px; transform: translateX(-50%); }
+    .hero-stats { gap: 24px; }
+    .feedback-box { padding: 32px 24px; }
+  }
+
+  @media print {
+    .hero::before, .hero::after { display: none; }
+    .feature-card:hover { transform: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Concept Overview · For Review</div>
+    <h1>Inventory that moves<br>with your <span>field team.</span></h1>
+    <p class="hero-sub">FieldStock is a purpose-built inventory management system for utility field service operations — tracking every part from the warehouse shelf to the truck to the job.</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Field trucks supported</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1,000s</div>
+        <div class="stat-label">SKUs, fully scalable</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Paper lists. Ever again.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE FLOW -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">One system. Three steps.</h2>
+    <p class="section-intro">Every transaction in FieldStock follows the same simple chain — from the moment stock arrives to the moment it's used on a job.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">Step 01</div>
+        <div class="flow-title">Warehouse</div>
+        <div class="flow-desc">Stock is received, cataloged, and managed by your warehouse manager. Every item gets a barcode.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">Step 02</div>
+        <div class="flow-title">Truck</div>
+        <div class="flow-desc">Parts are transferred to a truck. A tech checks out the truck and takes ownership of what's on it.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">Step 03</div>
+        <div class="flow-title">Job</div>
+        <div class="flow-desc">The tech scans or enters what was used on the job, tied to a work order number. Stock updates instantly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- FEATURES -->
+<section class="section alt">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything the team needs.<br>Nothing it doesn't.</h2>
+    <p class="section-intro">FieldStock is purpose-built for field service inventory — not adapted from a generic warehouse tool.</p>
+    <div class="feature-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-name">Item Catalog</div>
+        <div class="feature-desc">Manage all your parts with internal IDs, descriptions, vendor part numbers, costs, and supplier info. Designed to scale from 100 to 10,000+ SKUs.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔖</div>
+        <div class="feature-name">Barcode Generation & Printing</div>
+        <div class="feature-desc">Automatically generate barcodes for items that don't have them. Print label sheets directly from the system — no separate software needed.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <div class="feature-name">Receiving</div>
+        <div class="feature-desc">Log incoming shipments item by item. Scan barcodes, confirm quantities, and warehouse stock updates automatically. Attach a PO reference number for your records.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🚚</div>
+        <div class="feature-name">Truck Check-In / Check-Out</div>
+        <div class="feature-desc">Techs check out a truck at the start of the day and check it in when done. While a truck is checked out, that tech is accountable for everything on it.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-name">Warehouse-to-Truck Transfers</div>
+        <div class="feature-desc">Stock a truck from the warehouse with a simple scan-and-confirm workflow. Inventory deducts from the warehouse and adds to the truck in real time.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">↔️</div>
+        <div class="feature-name">Truck-to-Truck Transfers</div>
+        <div class="feature-desc">When a tech needs to borrow from another truck, it's logged — not lost. Every transfer has a record with who, what, when, and how many.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-name">Mobile Job Consumption</div>
+        <div class="feature-desc">Techs open the site on their phone, enter a work order number, and scan or select what they used. Takes about 60 seconds at the end of a job.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📸</div>
+        <div class="feature-name">Camera Barcode Scanning</div>
+        <div class="feature-desc">No scanner hardware needed. Techs use the phone camera to scan any item barcode in the field — during a job or at the end of the day.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-name">Par List Management</div>
+        <div class="feature-desc">Set standard stocking levels per item per truck. The system uses these to flag when a truck is running low and guide restocking decisions.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <div class="feature-name">Returns</div>
+        <div class="feature-desc">Unused parts can be returned from a truck back to the warehouse — tracked, timestamped, and credited back to warehouse stock.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✏️</div>
+        <div class="feature-name">Manual Adjustments</div>
+        <div class="feature-desc">Warehouse managers can correct quantities at any location with a required reason note. Every adjustment is logged — nothing disappears silently.</div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-name">Cycle Counts</div>
+        <div class="feature-desc">Run a physical count of the warehouse or any truck. The system shows expected quantities, you enter actuals, and it highlights any discrepancies before you post.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- WHO DOES WHAT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">User Roles</div>
+    <h2 class="section-title">The right tools for<br>the right people.</h2>
+    <p class="section-intro">Each role sees only what they need — no clutter, no confusion.</p>
+    <div class="role-grid">
+
+      <div class="role-card">
+        <div class="role-title">Warehouse Manager</div>
+        <ul class="role-items">
+          <li>Receive and catalog new stock</li>
+          <li>Transfer stock to trucks</li>
+          <li>View all truck stock levels</li>
+          <li>Run low-stock reports</li>
+          <li>Conduct cycle counts</li>
+          <li>Print barcode labels</li>
+          <li>Process returns & adjustments</li>
+        </ul>
+      </div>
+
+      <div class="role-card orange">
+        <div class="role-title">Field Technician</div>
+        <ul class="role-items">
+          <li>Check out and check in a truck</li>
+          <li>View current stock on their truck</li>
+          <li>Scan items to log job consumption</li>
+          <li>Enter work order number on each job</li>
+          <li>Initiate truck-to-truck transfers</li>
+        </ul>
+      </div>
+
+      <div class="role-card dark">
+        <div class="role-title">Admin / Owner</div>
+        <ul class="role-items">
+          <li>Full access to all features</li>
+          <li>Manage users and roles</li>
+          <li>Access all reports and cost data</li>
+          <li>Override or force-close assignments</li>
+          <li>Manage par lists and catalog</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- REPORTS -->
+<section class="section alt">
+  <div class="section-inner">
+    <div class="section-label">Reporting</div>
+    <h2 class="section-title">Know where everything is.<br>Know what it cost.</h2>
+    <p class="section-intro">Every transaction is recorded. Every report is exportable to CSV or PDF.</p>
+    <div class="report-list">
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Current Stock by Location</div>
+          <div class="report-desc">Real-time snapshot of every item at the warehouse and each truck, with quantities and par levels.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot" style="background:var(--orange)"></div>
+        <div>
+          <div class="report-name">Low Stock / Reorder Report</div>
+          <div class="report-desc">Items at or below reorder threshold. The manager's input to building a purchase order — ready to export.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Consumption by Work Order</div>
+          <div class="report-desc">Every item used on a specific job — quantities, unit costs, extended costs. Answers: what did this job actually cost?</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Consumption by Technician</div>
+          <div class="report-desc">Material usage summary per tech over any date range. Supports accountability and productivity visibility.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Usage Trends by Item</div>
+          <div class="report-desc">How fast is each SKU moving? Surfaces high-velocity items that may need higher par levels.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Full Transaction History</div>
+          <div class="report-desc">Complete audit log — filterable by type, location, item, user, or date range. Nothing is ever deleted.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Truck Stock Summary</div>
+          <div class="report-desc">At-a-glance view of all trucks: who has it checked out, total items stocked, how many are below par.</div>
+        </div>
+      </div>
+
+      <div class="report-item">
+        <div class="report-dot"></div>
+        <div>
+          <div class="report-name">Variance / Shrinkage Report</div>
+          <div class="report-desc">Expected vs. actual counts from audit sessions. Identifies loss patterns over time.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- PHASES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Rollout Plan</div>
+    <h2 class="section-title">Live fast.<br>Grow from there.</h2>
+    <p class="section-intro">The core system — the part that replaces your paper process — launches in Phase 1. Everything else builds on it.</p>
+    <div class="phase-list">
+
+      <div class="phase-item">
+        <div class="phase-num">1</div>
+        <div class="phase-content">
+          <div class="phase-title">Core — Replace the Paper</div>
+          <div class="phase-desc">Get the fundamental transaction chain live: receive stock, transfer to trucks, check trucks in and out, log job consumption against work orders, view live stock levels, and run the low-stock report.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">Catalog & barcodes</span>
+            <span class="phase-tag">Receiving</span>
+            <span class="phase-tag">Truck check-in/out</span>
+            <span class="phase-tag">Transfers</span>
+            <span class="phase-tag">Job consumption</span>
+            <span class="phase-tag">Stock & low-stock reports</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-num">2</div>
+        <div class="phase-content">
+          <div class="phase-title">Operations — Full Visibility</div>
+          <div class="phase-desc">Add the movement types and reports that give the manager complete operational control: truck-to-truck transfers, returns, par lists, adjustments, and the full consumption reporting suite.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">Truck-to-truck transfers</span>
+            <span class="phase-tag">Returns</span>
+            <span class="phase-tag">Par list management</span>
+            <span class="phase-tag">Adjustments</span>
+            <span class="phase-tag">Consumption reports</span>
+            <span class="phase-tag">CSV export</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-num">3</div>
+        <div class="phase-content">
+          <div class="phase-title">Audit & Insight — Full Feature Parity</div>
+          <div class="phase-desc">Cycle counts, variance reporting, cost summaries, and dashboards. The full system as designed.</div>
+          <div class="phase-tags">
+            <span class="phase-tag">Cycle counts</span>
+            <span class="phase-tag">Variance report</span>
+            <span class="phase-tag">Cost summary</span>
+            <span class="phase-tag">Manager dashboard</span>
+            <span class="phase-tag">PDF export</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- FEEDBACK -->
+<section class="section alt">
+  <div class="section-inner">
+    <div class="feedback-box">
+      <h2>Does this match what you need?</h2>
+      <p>This overview is based on our discovery conversations. A few things we'd love your input on before we finalize the build plan:</p>
+      <div class="feedback-questions">
+        <div class="fq"><span class="fq-num">1.</span> Does the warehouse → truck → job flow match how your team actually works day to day?</div>
+        <div class="fq"><span class="fq-num">2.</span> The tech check-in/check-out process assigns accountability for a truck's inventory. Does that workflow make sense for how your team operates?</div>
+        <div class="fq"><span class="fq-num">3.</span> When unused parts are left on a truck after a job, when should they be returned to the warehouse versus staying on the truck?</div>
+        <div class="fq"><span class="fq-num">4.</span> Are there any features here that aren't needed, or anything missing that should be?</div>
+        <div class="fq"><span class="fq-num">5.</span> Does the 3-phase rollout sequence feel right, or would you prioritize any features differently?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>FieldStock — Concept Overview &nbsp;·&nbsp; Prepared for review &nbsp;·&nbsp; Confidential</p>
+</footer>
+
+</body>
+</html>
